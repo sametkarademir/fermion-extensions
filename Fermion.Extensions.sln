@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{12C819D4-65B5-4AA7-B08B-B8EDBEF7FB16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{443F1B1A-1CE3-46CA-AE77-54346A13F37E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fermion.Extensions", "src\Fermion.Extensions\Fermion.Extensions.csproj", "{895CB269-7413-4A5A-988D-584E0AD93D41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fermion.Extensions.Tests", "test\Fermion.Extensions.Tests\Fermion.Extensions.Tests.csproj", "{82F25AEA-7E74-4045-9DCC-B3E4FC4E6A11}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{895CB269-7413-4A5A-988D-584E0AD93D41} = {12C819D4-65B5-4AA7-B08B-B8EDBEF7FB16}
+		{82F25AEA-7E74-4045-9DCC-B3E4FC4E6A11} = {443F1B1A-1CE3-46CA-AE77-54346A13F37E}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{895CB269-7413-4A5A-988D-584E0AD93D41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{895CB269-7413-4A5A-988D-584E0AD93D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{895CB269-7413-4A5A-988D-584E0AD93D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{895CB269-7413-4A5A-988D-584E0AD93D41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82F25AEA-7E74-4045-9DCC-B3E4FC4E6A11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82F25AEA-7E74-4045-9DCC-B3E4FC4E6A11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82F25AEA-7E74-4045-9DCC-B3E4FC4E6A11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82F25AEA-7E74-4045-9DCC-B3E4FC4E6A11}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
