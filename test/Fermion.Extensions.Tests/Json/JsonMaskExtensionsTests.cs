@@ -291,4 +291,86 @@ public class JsonMaskExtensionsTests
         Assert.Equal("***MASKED***",
             user2.GetProperty("Security").GetProperty("Settings").GetProperty("RecoveryKey").GetString());
     }
+
+
+    [Fact]
+    public void MaskSensitiveData_ShouldMaskOnlySensitivePartsInConnectionString()
+    {
+        // Arrange
+        const string jsonData = @"{
+            ""ConnectionString"": ""Server=myserver;Database=mydb;User=myuser;Password=secret123;"",
+            ""OtherConnectionString"": ""Server=otherserver;Database=otherdb;User=otheruser;Password=otherpass;"",
+            ""RegularText"": ""This is normal text""
+        }";
+
+        // Act
+        var result = JsonMaskExtensions.MaskSensitiveData(jsonData);
+        var resultObj = JsonSerializer.Deserialize<JsonElement>(result!);
+
+        // Assert
+        Assert.Equal("Server=myserver;Database=mydb;User=myuser;Password=***MASKED***;", resultObj.GetProperty("ConnectionString").GetString());
+        Assert.Equal("Server=otherserver;Database=otherdb;User=otheruser;Password=***MASKED***;", resultObj.GetProperty("OtherConnectionString").GetString());
+        Assert.Equal("This is normal text", resultObj.GetProperty("RegularText").GetString());
+    }
+
+    [Fact]
+    public void MaskSensitiveData_ShouldMaskMultipleSensitivePartsInConnectionString()
+    {
+        // Arrange
+        const string jsonData = @"{
+            ""ConnectionString"": ""Server=myserver;Database=mydb;User=myuser;Password=secret123;ApiKey=abc123;Token=xyz789;"",
+            ""RegularText"": ""This is normal text""
+        }";
+
+        // Act
+        var result = JsonMaskExtensions.MaskSensitiveData(jsonData);
+        var resultObj = JsonSerializer.Deserialize<JsonElement>(result!);
+
+        // Assert
+        Assert.Equal("Server=myserver;Database=mydb;User=myuser;Password=***MASKED***;ApiKey=***MASKED***;Token=***MASKED***;", resultObj.GetProperty("ConnectionString").GetString());
+        Assert.Equal("This is normal text", resultObj.GetProperty("RegularText").GetString());
+    }
+
+    [Fact]
+    public void MaskSensitiveData_ShouldHandleConnectionStringInNestedObjects()
+    {
+        // Arrange
+        const string jsonData = @"{
+            ""Config"": {
+                ""ConnectionString"": ""Server=myserver;Database=mydb;User=myuser;Password=secret123;"",
+                ""OtherConnectionString"": ""Server=otherserver;Database=otherdb;User=otheruser;Password=otherpass;""
+            },
+            ""RegularText"": ""This is normal text""
+        }";
+
+        // Act
+        var result = JsonMaskExtensions.MaskSensitiveData(jsonData);
+        var resultObj = JsonSerializer.Deserialize<JsonElement>(result!);
+
+        // Assert
+        var config = resultObj.GetProperty("Config");
+        Assert.Equal("Server=myserver;Database=mydb;User=myuser;Password=***MASKED***;", config.GetProperty("ConnectionString").GetString());
+        Assert.Equal("Server=otherserver;Database=otherdb;User=otheruser;Password=***MASKED***;", config.GetProperty("OtherConnectionString").GetString());
+        Assert.Equal("This is normal text", resultObj.GetProperty("RegularText").GetString());
+    }
+
+    [Fact]
+    public void MaskSensitiveData_ShouldHandleConnectionStringInArray()
+    {
+        // Arrange
+        const string jsonData = @"[
+            ""Server=server1;Database=db1;User=user1;Password=pass1;"",
+            ""Server=server2;Database=db2;User=user2;Password=pass2;"",
+            ""Regular text""
+        ]";
+
+        // Act
+        var result = JsonMaskExtensions.MaskSensitiveData(jsonData);
+        var resultArray = JsonSerializer.Deserialize<JsonElement>(result!);
+
+        // Assert
+        Assert.Equal("Server=server1;Database=db1;User=user1;Password=***MASKED***;", resultArray[0].GetString());
+        Assert.Equal("Server=server2;Database=db2;User=user2;Password=***MASKED***;", resultArray[1].GetString());
+        Assert.Equal("Regular text", resultArray[2].GetString());
+    }
 }

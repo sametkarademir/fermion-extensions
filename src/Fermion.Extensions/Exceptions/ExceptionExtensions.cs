@@ -59,21 +59,23 @@ public static class ExceptionExtensions
     public static Dictionary<string, object> ConvertExceptionDataToDictionary(this Exception exception)
     {
         var data = new Dictionary<string, object>(exception.Data.Count);
-        if (exception.Data.Count > 0)
+        if (exception.Data.Count <= 0)
         {
-            foreach (var keyObject in exception.Data.Keys)
+            return data;
+        }
+        
+        foreach (var keyObject in exception.Data.Keys)
+        {
+            var key = keyObject.ToString();
+            if (string.IsNullOrWhiteSpace(key))
             {
-                var key = keyObject.ToString();
-                if (string.IsNullOrWhiteSpace(key))
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                var value = exception.Data[keyObject];
-                if (value != null)
-                {
-                    data.Add(key, value);
-                }
+            var value = exception.Data[keyObject];
+            if (value != null)
+            {
+                data.Add(key, value);
             }
         }
 
@@ -142,9 +144,9 @@ public static class ExceptionExtensions
         {
             innerExceptionsList.Add(new Dictionary<string, string>
             {
-                { "Type", innerException.GetType().FullName ?? string.Empty },
+                { "Type", GetExceptionType(exception) },
                 { "Message", innerException.Message },
-                { "StackTrace", innerException.StackTrace ?? string.Empty },
+                { "StackTrace", innerException.StackTrace ?? "No stack trace available" },
                 { "Depth", depth.ToString() }
             });
             innerException = innerException.InnerException;

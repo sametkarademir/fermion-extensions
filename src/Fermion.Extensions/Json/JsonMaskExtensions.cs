@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
+using System.Text.RegularExpressions;
 
 namespace Fermion.Extensions.Json;
 
@@ -48,8 +49,13 @@ public static class JsonMaskExtensions
         {
             foreach (var prop in sensitivePropertyNames)
             {
-                var pattern = $@"(""{prop}""\s*:\s*"")(.*?)("")";
-                data = System.Text.RegularExpressions.Regex.Replace(data, pattern, $"$1{maskPattern}$3", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                // Mask property values
+                var propertyPattern = $@"(""{prop}""\s*:\s*"")(.*?)("")";
+                data = Regex.Replace(data, propertyPattern, $"$1{maskPattern}$3", RegexOptions.IgnoreCase);
+
+                // Mask connection string like values
+                var connectionStringPattern = $@"({prop}=)([^;]+)";
+                data = Regex.Replace(data, connectionStringPattern, $"$1{maskPattern}", RegexOptions.IgnoreCase);
             }
         }
 
@@ -86,35 +92,73 @@ public static class JsonMaskExtensions
                     {
                         writer.WriteStringValue(maskPattern);
                     }
+                    else if (property.Value.ValueKind == JsonValueKind.String)
+                    {
+                        var value = property.Value.GetString();
+                        if (value != null)
+                        {
+                            // Check if the value is a connection string like structure
+                            var maskedValue = value;
+                            foreach (var prop in sensitiveProps)
+                            {
+                                var pattern = $@"({prop}=)([^;]+)";
+                                maskedValue = Regex.Replace(maskedValue, pattern, $"$1{maskPattern}", RegexOptions.IgnoreCase);
+                            }
+                            writer.WriteStringValue(maskedValue);
+                        }
+                        else
+                        {
+                            writer.WriteStringValue(value);
+                        }
+                    }
                     else
                     {
                         MaskJsonElement(property.Value, writer, sensitiveProps, maskPattern);
                     }
                 }
-
                 writer.WriteEndObject();
                 break;
+
             case JsonValueKind.Array:
                 writer.WriteStartArray();
                 foreach (var item in element.EnumerateArray())
                 {
                     MaskJsonElement(item, writer, sensitiveProps, maskPattern);
                 }
-
                 writer.WriteEndArray();
                 break;
+
             case JsonValueKind.String:
-                writer.WriteStringValue(element.GetString());
+                var stringValue = element.GetString();
+                if (stringValue != null)
+                {
+                    // Check if the value is a connection string like structure
+                    var maskedValue = stringValue;
+                    foreach (var prop in sensitiveProps)
+                    {
+                        var pattern = $@"({prop}=)([^;]+)";
+                        maskedValue = Regex.Replace(maskedValue, pattern, $"$1{maskPattern}", RegexOptions.IgnoreCase);
+                    }
+                    writer.WriteStringValue(maskedValue);
+                }
+                else
+                {
+                    writer.WriteStringValue(stringValue);
+                }
                 break;
+
             case JsonValueKind.Number:
                 writer.WriteNumberValue(element.GetDecimal());
                 break;
+
             case JsonValueKind.True:
                 writer.WriteBooleanValue(true);
                 break;
+
             case JsonValueKind.False:
                 writer.WriteBooleanValue(false);
                 break;
+
             case JsonValueKind.Null:
                 writer.WriteNullValue();
                 break;
