@@ -5,18 +5,25 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <PackageId>Fermion.Extensions</PackageId>
-        <Version>0.0.1</Version>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>0.1.0</Version>
         <Authors>Samet Karademir</Authors>
+        <Description>A comprehensive collection of extension methods for .NET applications, including JSON processing, HTTP context utilities, claims handling, and more.</Description>
+        <PackageTags>extensions;dotnet;utilities;json;http;claims;security</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <RepositoryUrl>https://github.com/sametkarademir/fermion-extensions</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/sametkarademir/fermion-extensions</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/sametkarademir/fermion-extensions.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>readme.md</PackageReadmeFile>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <Deterministic>true</Deterministic>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Update="readme.md">
-            <Pack>true</Pack>
-            <PackagePath>/</PackagePath>
-        </None>
+        <None Include="readme.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,6 +33,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.3.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
         <PackageReference Include="UAParser" Version="3.1.47"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>

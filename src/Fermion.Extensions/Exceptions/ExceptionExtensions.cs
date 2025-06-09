@@ -63,7 +63,7 @@ public static class ExceptionExtensions
         {
             return data;
         }
-        
+
         foreach (var keyObject in exception.Data.Keys)
         {
             var key = keyObject.ToString();
