@@ -43,6 +43,7 @@ public static class LinqExtensions
     /// Orders a queryable collection based on a condition.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the queryable collection.</typeparam>
+    /// <typeparam name="TKey">The type of the key to order by.</typeparam>
     /// <param name="query">The queryable collection to order.</param>
     /// <param name="condition">The condition to evaluate.</param>
     /// <param name="keySelector">The key selector to apply to the queryable collection.</param>
@@ -62,6 +63,7 @@ public static class LinqExtensions
     /// Orders a queryable collection based on a condition.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the queryable collection.</typeparam>
+    /// <typeparam name="TKey">The type of the key to order by.</typeparam>
     /// <param name="query">The queryable collection to order.</param>
     /// <param name="condition">The condition to evaluate.</param>
     /// <param name="keySelector">The key selector to apply to the queryable collection.</param>
@@ -113,6 +115,7 @@ public static class LinqExtensions
     /// Selects elements from the queryable collection based on a condition.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the queryable collection.</typeparam>
+    /// <typeparam name="TResult">The type of the elements to select from the queryable collection.</typeparam>
     /// <param name="query">The queryable collection to select elements from.</param>
     /// <param name="condition">The condition to evaluate.</param>
     /// <param name="selector">The selector to apply to the queryable collection.</param>
