@@ -144,7 +144,7 @@ public static class ExceptionExtensions
         {
             innerExceptionsList.Add(new Dictionary<string, string>
             {
-                { "Type", GetExceptionType(exception) },
+                { "Type", GetExceptionType(innerException) },
                 { "Message", innerException.Message },
                 { "StackTrace", innerException.StackTrace ?? "No stack trace available" },
                 { "Depth", depth.ToString() }
